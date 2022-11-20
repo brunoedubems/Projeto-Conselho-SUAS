@@ -103,7 +103,7 @@ const token = jwt.sign({
 },
 secret,
 )
-res.status(200).json({msg:'autenticação realizada com sucesso'})
+res.status(200).json({msg:'autenticação realizada com sucesso', token})
 } catch (err) {
             console.log(err)
             res.status(500).json({msg: 'Aconteceu um erro no servidor gratis'})
