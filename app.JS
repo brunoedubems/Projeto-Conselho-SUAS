@@ -87,10 +87,30 @@ app.post("/auth/login", async (req,res) =>{
     //login se o usuario existe
     const user = await User.findOne({email: email})
     if(!user){
-        return res.status(422).json({msg: 'usuario não encontrado'})
+        return res.status(404).json({msg: 'usuario não encontrado'})
+    }
+
+    //verificar a senha
+    const checkPassword = await bcrypt.compare(password, user.password)
+    if(!checkPassword){
+        return res.status(422).json({msg: 'Senha inválida'})
     }
     
-
+    try {
+const secret = process.env.SECRET
+const token = jwt.sign({
+    id: user._id,
+},
+secret,
+)
+res.status(200).json({msg:'autenticação realizada com sucesso'})
+} catch (err) {
+            console.log(err)
+            res.status(500).json({msg: 'Aconteceu um erro no servidor gratis'})
+        }
+        
+     
+    
 })
 
 mongoose
